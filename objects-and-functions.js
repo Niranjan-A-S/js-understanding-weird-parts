@@ -170,22 +170,192 @@
 // greet("John", "Doe", "es", "Spanish");
 
 //Function overloading
-function greet(firstName, lastName, language = "en") {
-  language === "en" && console.log(`Hello ${firstName} ${lastName}`);
-  language === "es" && console.log(`Hola ${firstName} ${lastName}`);
-}
+// function greet(firstName, lastName, language = "en") {
+//   language === "en" && console.log(`Hello ${firstName} ${lastName}`);
+//   language === "es" && console.log(`Hola ${firstName} ${lastName}`);
+// }
 
-//common design pattern
-function greetEnglish(firstName, lastName) {
-  greet(firstName, lastName, "en");
-}
+// //common design pattern
+// function greetEnglish(firstName, lastName) {
+//   greet(firstName, lastName, "en");
+// }
 
-function greetSpanish(firstName, lastName) {
-  greet(firstName, lastName, "es");
-}
+// function greetSpanish(firstName, lastName) {
+//   greet(firstName, lastName, "es");
+// }
 
-greet("John", "Doe", "en");
-greet("John", "Doe", "es");
+// greet("John", "Doe", "en");
+// greet("John", "Doe", "es");
 
-greetEnglish("John", "Doe");
-greetSpanish("John", "Doe");
+// greetEnglish("John", "Doe");
+// greetSpanish("John", "Doe");
+
+//Immediately invoked function expression
+// const greet = ((name) => {
+//   return "Hello " + name;
+// })("John");
+
+// console.log(greet);
+
+//another way to trick the syntax parser to tell that after using an anonymous function need not to be statement
+// (function (name) {
+//   console.log("Hello " + name);
+// })("Niranjan");
+
+//CLOSURES
+
+// const greet = (whatToSay) => (name) => console.log(`${whatToSay} ${name}`);
+// const sayHello = greet("Hello");
+
+// sayHello("John");
+//here the sayHello function along with its lexical environment form a closure
+
+// const buildFunctions = () => {
+//   var array = [];
+
+//   for (var i = 0; i < 3; i++) {
+//     array.push(() => console.log(i));
+// here since var is not block scoped and if the  functions that are put into the array are
+// not executed after the for loop the value of i will be 3 and when we try to call this functions
+// later the functions still has access to the outer lexical environment where the value of i will be 3
+// so in the console 3 3 3 will be printed
+//   }
+
+//   return array;
+// };
+
+// const fs = buildFunctions();
+
+// console.log(fs[0]());
+// console.log(fs[1]());
+// console.log(fs[2]());
+
+//to get the desired outputs
+// const buildFunctions2 = () => {
+//   var array = [];
+
+//   for (var i = 0; i < 3; i++) {
+//     array.push(
+//       (
+//         (j) => () =>
+//           console.log(j)
+//       )(i)
+//     );
+//   }
+
+//   return array;
+// };
+
+// const fs2 = buildFunctions2();
+
+// console.log(fs2[0]());
+// console.log(fs2[1]());
+// console.log(fs2[2]());
+
+//another method is just to use let instead of let since let is block scoped
+//each time the for loop runs it will be having different values in the memory
+
+// function factories
+
+// const makeGreeting = (language) => (firstName, lastName) => {
+//   language === "en" && console.log("Hello " + firstName + " " + lastName);
+//   language === "es" && console.log("Hola " + firstName + " " + lastName);
+// };
+
+// const greetEnglish = makeGreeting("en");
+// const greetSpanish = makeGreeting("es");
+//here even though these function expressions refer to the same outer function
+//two separate execution context are created
+
+// console.log(greetEnglish());
+// console.log(greetSpanish());
+
+// callbacks
+// const tellMeWhenDone = (callback) => {
+//   const a = 10000; //some work
+//   const b = 20000; //some work
+
+//   callback();
+// };
+
+// tellMeWhenDone(() => console.log("it's done"));
+// tellMeWhenDone(() => alert("it's done"));
+
+//call apply bind
+// const person = {
+//   firstName: "John",
+//   lastName: "Doe",
+//   getFullName() {
+//     const fullName = this.firstName + " " + this.lastName;
+//     return fullName;
+//   },
+// };
+
+// const logName = function (lang1, lang2) {
+//   console.log("Logged: " + this.getFullName());
+//   console.log(lang1 + " " + lang2);
+// };
+
+// const logPersonName = logName.bind(person); //creates  a copy of the function with the object attached to it
+// logPersonName();
+
+// logName.call(person, "en", "es"); //first parameter should be "this"
+// logName.apply(person, ["en", "es"]); //first parameter should be "this" and arguments should be in an array
+
+// //another method
+// (function (lang1, lang2) {
+//   console.log("Logged: " + this.getFullName());
+//   console.log(lang1 + " " + lang2);
+// }.apply(person, ["mal", "hin"]));
+
+// //one use case  // function borrowing
+// const person2 = {
+//   firstName: "Jane",
+//   lastName: "Doe",
+// };
+
+// console.log(person.getFullName.call(person2));
+
+//function currying : creating a copy of a function with some preset parameters
+// const multiply = (a, b) => a * b;
+
+// const multiplyByTwo = multiply.bind(this, 2);
+// console.log(multiplyByTwo(5));
+
+// const multiplyByThree = multiply.bind(this, 3);
+// console.log(multiplyByThree(6));
+
+//********* FUNCTIONAL PROGRAMMING********/
+// const arr = [1, 2, 3];
+// console.log(arr);
+
+// const newArr = [];
+// for (let i = 0; i < arr.length; i++) {
+//   newArr.push(i * 2);
+// }
+
+// console.log(newArr);
+
+//FP approach to implement the same functionality
+// const map = (array, fn) => {
+//   const newArr = [];
+//   for (let i = 0; i < array.length; i++) {
+//     newArr.push(fn(array[i]));
+//   }
+//   return newArr;
+// };
+
+// map([1, 2, 3, 4], (i) => i * 2);
+// map([1, 2, 3, 4], (i) => i > 2);
+
+//another logic
+// const checkPastLimit = (limiter, item) => limiter > item;
+
+// const array2 = map([1, 2, 3, 4], checkPastLimit.bind(this, 2));
+// console.log(array2);
+
+// const checkPastLimitSimplified = (limiter) =>
+//   ((limiter, item) => limiter > item).bind(this, limiter);
+
+// const array3 = map([1, 2, 3, 4], checkPastLimitSimplified(3));
+// console.log(array3);
